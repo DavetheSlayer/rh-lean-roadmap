@@ -6,7 +6,7 @@ The proof is a Lean 4 archive of 175,187 files and 17.4 million lines, without c
 
 | | |
 |---|---|
-| [`docs/book.pdf`](docs/book.pdf) | The argument written out for mathematicians, in English (422 pages). Every statement the proof needs, in the order the proof uses it, each followed by the location of the Lean declaration that proves it. Arguments made for this proof are given with proofs; published results are stated in the form the archive uses, with references. Nine parts: the window criterion, the prime sum and the auxiliary primes, the divisibility from one theta lift, its accumulation along the chain, the two bounds on one slope, the Tate–Shafarevich window bound, and the three inputs with the Galois representations and the local Langlands correspondence they use. LaTeX sources in `docs/src/book/`. |
+| [`docs/book.pdf`](docs/book.pdf) | The argument written out for mathematicians, in English (472 pages). Every statement the proof needs, in the order the proof uses it, each followed by the location of the Lean declaration that proves it. Arguments made for this proof are given with proofs; published results are stated in the form the archive uses, with references. Nine parts: the window criterion, the prime sum and the auxiliary primes, the divisibility from one theta lift, its accumulation along the chain, the two bounds on one slope, the Tate–Shafarevich window bound, and the three inputs with the Galois representations and the local Langlands correspondence they use. LaTeX sources in `docs/src/book/`. |
 | [`docs/reading-guide-en.pdf`](docs/reading-guide-en.pdf) | A reading guide in English (22 pages). The argument in six steps, each tied to the archive's declarations: the prime sum over Frobenius classes, the theta-lift chain and the local computation behind its divisibility, the division of lattices and the two-sided slope estimate that plays the role of Stepanov's inequality, the Tate–Shafarevich window bound, how the three inputs are proved, and in what form the archive proves the published theorems it uses. An appendix gives the location of every declaration cited. |
 | [`docs/reading-guide-zh.pdf`](docs/reading-guide-zh.pdf) | The same guide in Chinese (21 pages). LaTeX sources in `docs/src/` (the Chinese version uses the Noto Serif/Sans SC fonts). |
 | [`paper/roadmap.pdf`](paper/roadmap.pdf) | Seven pages, in English. The top of the argument in five steps, each tied to declarations in the archive, then the published foundations and the points still to be traced. |
@@ -16,7 +16,7 @@ The proof is a Lean 4 archive of 175,187 files and 17.4 million lines, without c
 
 ## How the book was written
 
-Each chapter was drafted from the Lean source of the declarations it covers, checked against that source by a second model, revised, and checked and revised a second time. Statements follow the Lean statements; where the archive proves a published theorem in a weaker form, the chapter states the form the archive proves. The typewriter font is JetBrains Mono (SIL Open Font License); put `JetBrainsMono.ttf` in `docs/src/book/fonts/` and compile `main.tex` with XeLaTeX or Tectonic.
+Each chapter was drafted from the Lean source of the declarations it covers, then checked against that source and revised in three rounds. Six referees then read an anonymised copy of the whole book. Each point they raised was settled against the Lean source; the statements and proofs it concerned were added or corrected and checked again. Statements follow the Lean statements; where the archive proves a published theorem in a weaker form, the chapter states the form the archive proves. The typewriter font is JetBrains Mono (SIL Open Font License); put `JetBrainsMono.ttf` in `docs/src/book/fonts/` and compile `main.tex` with XeLaTeX or Tectonic.
 
 ## About this repository
 
@@ -73,7 +73,7 @@ Text, web page and video (`docs/`, `paper/`, `web/`, `video/`, this README): [CC
 
 2026 年 11 月 20 日，Levent Alpöge 公布了和 Claude 一起完成的黎曼猜想与狄利克雷 GRH 的 Lean 证明。证明是一份 Lean 档案，17.5 万个文件、1740 万行，没有注释。几个独立的检查器已经接受了它，11 月 21 日 Lean 和 Mathlib 社区发表联合声明（Lean FRO 和 Mathlib Initiative 背书），确认命题和证明都正确；Sutherland 还把它和另一个独立的形式化项目接在一起，推出了 Robin 不等式（所有 n > 5040）和 Lagarias 不等式（所有 n ≥ 1），这两个命题只讲约数和与调和数，不出现 ζ 函数。本仓库把证明写成数学家能读的文字，每条陈述都对应到档案里的定理和位置：
 
-- `docs/book.pdf`：成文稿（英文，422 页），按证明使用的顺序写出它需要的每条陈述，后面注明证明它的 Lean 声明；为这个证明新做的论证都给出了证明，已发表的结果按档案用到的形式陈述并引用；
+- `docs/book.pdf`：成文稿（英文，472 页），按证明使用的顺序写出它需要的每条陈述，后面注明证明它的 Lean 声明；为这个证明新做的论证都给出了证明，已发表的结果按档案用到的形式陈述并引用；
 - `docs/reading-guide-zh.pdf`：中文解读版（21 页），六步讲完证明，每一步对应到档案里的定理和位置，附录列出全部引用声明的完整位置；`docs/reading-guide-en.pdf` 是英文版；
 - `paper/roadmap.pdf`：7 页英文导读，把证明顶层的五步和档案里的具体声明一一对上；
 - `web/index.html`：中英双语的讲故事版，不需要数学背景，在线阅读：<https://rh-lean-roadmap.github.io/rh-lean-roadmap/>；
