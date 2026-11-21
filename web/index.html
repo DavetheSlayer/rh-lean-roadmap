@@ -618,7 +618,7 @@ a { color: var(--light); }
     GROUPS.forEach(function (g) { var s = document.createElement("span"); var sw = document.createElement("i"); sw.className = "sw"; sw.style.background = "var(" + g.c + ")"; s.appendChild(sw); s.appendChild(document.createTextNode(T(g.zh, g.en) + " " + g.n.toLocaleString("en-US"))); lg.appendChild(s); });
     document.getElementById("wallCap").textContent = view === "machine"
       ? T("每格代表 25 个文件，共 175,187 个。机器的眼光里，每一格都被检查器核过，已出结论的全部通过。", "Each cell is 25 files, 175,187 in all. To the machines every cell has been checked, and every finished check passed.")
-      : T("这份导读只读到亮着的顶层：知道它在做什么，不等于读懂了每一行。暗下去的部分里有三个输入的证明，还没有人给出人能读的讲解。", "This guide reached only the lit top layer, and knowing what it does is not the same as reading every line. The dimmed part holds the proofs of the three inputs, for which no human-readable account exists yet.");
+      : T("亮着的是这份导读讲到的顶层。暗下去的部分里有三个输入的证明，仓库里的成文稿在第六到第九部分把它们写成了数学文字。", "The lit cells are the top layer this guide covers. The dimmed part holds the proofs of the three inputs, which the book in the repository writes out as mathematics in Parts VI to IX.");
     document.getElementById("viewMachine").setAttribute("aria-pressed", String(view === "machine"));
     document.getElementById("viewHuman").setAttribute("aria-pressed", String(view === "human"));
   }
