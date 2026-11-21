@@ -8,7 +8,7 @@ The proof is a Lean 4 archive of 175,187 files and 17.4 million lines, without c
 |---|---|
 | [`paper/roadmap.pdf`](paper/roadmap.pdf) | Seven pages, in English. The top of the argument in five steps, each tied to declarations in the archive, then the published foundations and the points still to be traced. |
 | [`web/index.html`](web/index.html) | A story version for readers with no mathematics, in Chinese and English. Download it and open it in a browser. |
-| [`video/east-of-the-line.mp4`](video/east-of-the-line.mp4) | An 80-second vertical video (Chinese, text only, original background music) for social media, with two cover images. |
+| [`video/east-of-the-line.mp4`](video/east-of-the-line.mp4) | A 75-second vertical video (Chinese, text only, original background music) for social media, with two cover images. |
 | [`lean/Roadmap.lean`](lean/Roadmap.lean) | A small Lean file. Using only the archive's own theorems, it proves inside the archive that three inputs (`Green`, `VWin`, `HypsAlt …`) imply Mathlib's `RiemannHypothesis`. |
 
 ## About this repository
@@ -65,7 +65,7 @@ Text, web page and video (`paper/`, `web/`, `video/`, this README): [CC BY 4.0](
 
 - `paper/roadmap.pdf`：7 页英文导读，把证明顶层的五步和档案里的具体声明一一对上；
 - `web/index.html`：中英双语的讲故事版，不需要数学背景，下载后用浏览器打开；
-- `video/east-of-the-line.mp4`：80 秒竖屏短视频（纯文字介绍、原创背景音乐），附两张封面；
+- `video/east-of-the-line.mp4`：75 秒竖屏短视频（纯文字介绍、原创背景音乐），附两张封面；
 - `lean/Roadmap.lean`：一个小 Lean 文件，只用档案自己的定理串出“三个输入 ⇒ 黎曼猜想”，在档案里编译通过，只依赖三条标准公理。
 
 证明本身是 Alpöge 的档案。档案没有许可证，上面给了从作者网站下载、校验和编译的步骤。本仓库由一个人定方向、做取舍，文字和代码由多个 AI 模型（其中包括 Anthropic 的 Claude）写成并交叉核对；Alpöge 在 Anthropic 工作，本仓库独立于他和 Anthropic。
