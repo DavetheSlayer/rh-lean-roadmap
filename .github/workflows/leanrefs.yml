@@ -1,0 +1,18 @@
+name: leanrefs
+on:
+  pull_request:
+    paths: ['docs/src/book/**', 'scripts/check_leanrefs.py', '.github/workflows/leanrefs.yml']
+  workflow_dispatch:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: TomasOrtega/RH
+          ref: a6ac91a412dcbaab31801355ec5707024a71bf65  # Lean archive the book cites; bump together with the book
+          path: RH
+          sparse-checkout: extracted/lean/src
+          fetch-depth: 1
+      - run: python3 scripts/check_leanrefs.py RH/extracted/lean/src --skip-mathlib
