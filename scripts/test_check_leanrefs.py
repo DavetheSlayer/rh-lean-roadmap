@@ -162,13 +162,13 @@ class IndexFormat(unittest.TestCase):
         self.assertEqual((c, e), (1, []))
 
     def test_range_forms(self):
-        for rng in ("7", "12--30"):
+        for rng in ("7", "12--30", "1--2,4--5,7"):
             (c, _, e), st = self.run_idx(self.entry("Foo.good", rng=rng))
             self.assertEqual((c, e), (1, []), rng)
             self.assertEqual(st["index"], [1, 0, 0])
 
     def test_malformed_ranges(self):
-        for rng in ("foo", "12--", "--12", "12-30", "1,3", "12--30--40", ""):
+        for rng in ("foo", "12--", "--12", "12-30", "1,", ",1", "1,,2", "1,2--", "12--30--40", ""):
             (c, _, e), st = self.run_idx(self.entry("Foo.good", rng=rng))
             self.assertEqual(c, 0, rng)
             self.assertEqual(st["index"], [0, 0, 1], rng)
