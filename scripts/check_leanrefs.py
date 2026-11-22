@@ -14,7 +14,7 @@ This is a lexical check, NOT elaborated name resolution (it does not run Lean, r
      as `leaf`: the token must end exactly at the cited leaf. A QUALIFIED citation (contains
      a dot) must equal the declaration's reconstructed full name: the enclosing `namespace`
      blocks followed by the written token (a declaration written `_root_.X` declares `X`; a
-     citation `_root_.X` means `X`). No suffix or relative matching is done. An unqualified
+     citation `_root_.X` means exactly the root-level `X`, even when `X` has no dot). No suffix or relative matching is done. An unqualified
      citation (no dot) matches on the leaf alone.
   4. (--lines, advisory) a sanity check of the cited range only: parseable, inside the
      file, and the declaration does not start after the range ends. It does NOT check that
@@ -175,12 +175,13 @@ def declarations(file):
 
 
 def name_matches(cited, written, full):
-    if cited.startswith("_root_."):
+    absolute = cited.startswith("_root_.")
+    if absolute:
         cited = cited[len("_root_."):]
     parts = cited.split(".")
     if full.split(".")[-1] != parts[-1]:
         return False
-    if len(parts) == 1:
+    if len(parts) == 1 and not absolute:
         return True
     return cited == full
 

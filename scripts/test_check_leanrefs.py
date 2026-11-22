@@ -55,6 +55,11 @@ class T(unittest.TestCase):
         for d, good in [("Top.t", True), ("_root_.Top.t", True), ("Foo.Top.t", False), ("Foo.t", False)]:
             _, _, errs = self.run_one(d, lean=lean)
             self.assertEqual(not errs, good, d)
+    def test_root_unqualified(self):
+        self.bad("_root_.good")          # Foo.good is not root-level
+        lean = "theorem good : True := trivial\n"
+        _, _, errs = self.run_one("_root_.good", lean=lean)
+        self.assertEqual(errs, [])
     def test_noncomputable_section(self):
         lean = "namespace N\nnoncomputable section\ndef a := 1\nend\ntheorem t : True := trivial\nend N\n"
         _, _, errs = self.run_one("N.t", lean=lean)
