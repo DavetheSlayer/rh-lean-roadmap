@@ -73,13 +73,12 @@ _cache = {}
 
 def decl_lines(file, last):
     """Line numbers (1-based) where a declaration whose name ends in `last` is introduced."""
-    key = file
-    if key not in _cache:
-        _cache[key] = file.read_text(encoding="utf-8", errors="replace").splitlines()
+    if file not in _cache:
+        _cache[file] = file.read_text(encoding="utf-8", errors="replace").splitlines()
     pat = re.compile(r"(?:^|[\s@\]])" + KEYWORDS + r"\s+(?:[\w'.«»]*\.)?" + re.escape(last) + r"(?![\w'!?])")
     # structure/class fields (`  name : T`) are declarations too
     fpat = re.compile(r"^\s+(?:\(|\{)?" + re.escape(last) + r"(?:\s+[\w']+)*\s*:(?!=)")
-    hits = [n for n, l in enumerate(_cache[key], 1) if pat.search(l) or fpat.search(l)]
+    hits = [n for n, l in enumerate(_cache[file], 1) if pat.search(l) or fpat.search(l)]
     return hits
 
 
@@ -89,13 +88,12 @@ def main():
     ap.add_argument("--tex", nargs="+", type=Path, default=[Path(p) for p in DEFAULT_TEX])
     ap.add_argument("--skip-mathlib", action="store_true", help="skip modules starting with Mathlib/Batteries/Std/Lean/Init")
     ap.add_argument("--lines", action="store_true", help="also sanity-check the cited line ranges")
-    ap.add_argument("-q", "--quiet", action="store_true")
     a = ap.parse_args()
 
     total = skipped = 0
     errors = []
     for tex in a.tex:
-        for line, args in parse_leanref_file(tex):
+        for line, args in parse_leanrefs(tex):
             total += 1
             where = f"{tex}:{line}"
             if args is None:
@@ -128,10 +126,6 @@ def main():
         print("FAIL", e)
     print(f"{total} \\leanref checked, {skipped} skipped, {len(errors)} failed")
     return 1 if errors else 0
-
-
-def parse_leanref_file(p):
-    return parse_leanrefs(p)
 
 
 if __name__ == "__main__":
