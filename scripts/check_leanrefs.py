@@ -3,7 +3,7 @@
 
 Two citation formats carry a module and are checked (both with the same rules below):
   * `\\leanref{decl}{module}{a--b}` (appendix proofs);
-  * index entries `\\texttt{decl} (\\texttt{module}, lines a--b)` (the range must be `n` or `a--b`,
+  * index entries `\\texttt{decl} (\\texttt{module}, lines a--b)` (the range must be `n`, `a--b` or a comma-separated list of these,
     else the entry is malformed and the run fails) (the "Index of Lean
     declarations"; `\\_` and `\\allowbreak{}` are stripped from names).
 NOT checked: the main-text `\\leanrefs{\\texttt{...}}` lists, which name declarations without
@@ -88,7 +88,8 @@ def parse_leanrefs(path):
 
 INDEX_RE = re.compile(r"\\texttt\{((?:[^{}]|\{\})*)\}\s*\(\\texttt\{((?:[^{}]|\{\})*)\},\s*lines\s+([^()]*)\)")
 MalformedRange = namedtuple("MalformedRange", "decl range")  # index entry whose range is not `n` or `a--b`
-INDEX_RANGE_RE = re.compile(r"\d+(?:--\d+)?")  # a single line `n` or `a--b`; nothing else is well-formed
+_RNG = r"\d+(?:--\d+)?"
+INDEX_RANGE_RE = re.compile(_RNG + "(?:," + _RNG + ")*")  # `n`, `a--b`, or a comma-separated list of these; nothing else is well-formed
 LINES_RE = re.compile(r",\s*lines\s")
 
 
@@ -252,7 +253,7 @@ def check(root, tex_files, skip_mathlib=False, lines=False, stats=None):
                     st[fmt][2] += 1
                     continue
                 if isinstance(args, MalformedRange):
-                    errors.append(f"{where}: malformed {what}: range `{args.range}` is not `n` or `a--b` (declaration {args.decl})")
+                    errors.append(f"{where}: malformed {what}: range `{args.range}` is not `n`, `a--b` or a list of these (declaration {args.decl})")
                     st[fmt][2] += 1
                     continue
                 decl, mod, rng = args
