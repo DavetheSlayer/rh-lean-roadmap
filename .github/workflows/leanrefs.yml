@@ -1,13 +1,17 @@
 name: leanrefs
 on:
   pull_request:
-    paths: ['docs/src/book/**', 'scripts/check_leanrefs.py', '.github/workflows/leanrefs.yml']
+    paths: ['docs/src/book/**', 'scripts/**', '.github/workflows/leanrefs.yml']
   workflow_dispatch:
+permissions:
+  contents: read
 jobs:
   check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: actions/checkout@v4
         with:
           repository: TomasOrtega/RH
@@ -15,4 +19,6 @@ jobs:
           path: RH
           sparse-checkout: extracted/lean/src
           fetch-depth: 1
+          persist-credentials: false
+      - run: python3 scripts/test_check_leanrefs.py
       - run: python3 scripts/check_leanrefs.py RH/extracted/lean/src --skip-mathlib
