@@ -11,11 +11,11 @@ This is a lexical check, NOT elaborated name resolution (it does not run Lean, r
      body (only lines at the body's field indentation, from the `where` line until the next
      top-level command).
   3. Name rule. The declared name token is read completely, so `A.leaf.child` never counts
-     as `leaf`: the token must end exactly at the cited leaf. If the cited name is
-     qualified (`X.Y.leaf`), the declared name must in addition equal a dot-suffix of the
-     cited name: after prefixing the enclosing `namespace` blocks (`X.Y.leaf`; `_root_.`
-     is honoured), or, for a declaration written with a dotted name, as written (`Y.leaf`). Unqualified citations match
-     on the leaf alone.
+     as `leaf`: the token must end exactly at the cited leaf. A QUALIFIED citation (contains
+     a dot) must equal the declaration's reconstructed full name: the enclosing `namespace`
+     blocks followed by the written token (a declaration written `_root_.X` declares `X`; a
+     citation `_root_.X` means `X`). No suffix or relative matching is done. An unqualified
+     citation (no dot) matches on the leaf alone.
   4. (--lines, advisory) a sanity check of the cited range only: parseable, inside the
      file, and the declaration does not start after the range ends. It does NOT check that
      the declaration lies inside the range (the book's ranges often cover just the proof).
@@ -110,7 +110,7 @@ MODS = r"(?:(?:@\[[^\]]*\]|private|protected|noncomputable|partial|unsafe|nonrec
 DECL_RE = re.compile(r"^\s*" + MODS + r"(?:class\s+inductive|theorem|lemma|def|structure|abbrev|instance|class|inductive|opaque|axiom|irreducible_def)\s+([^\s:({\[⦃⟨]+)")
 STRUCT_RE = re.compile(r"^\s*" + MODS + r"(?:structure|class)\s+([^\s:({\[⦃⟨]+)")
 NS_RE = re.compile(r"^\s*namespace\s+(\S+)")
-SEC_RE = re.compile(r"^\s*section\b")
+SEC_RE = re.compile(r"^\s*(?:noncomputable\s+)?section\b")
 END_RE = re.compile(r"^\s*end\b(?:\s+(\S+))?")
 FIELD_RE = re.compile(r"^(\s+)((?:[\w'.«»!?]+\s+)*[\w'.«»!?]+)\s*:(?!=)")
 # any top-level command at column 0 ends a structure body
@@ -175,16 +175,14 @@ def declarations(file):
 
 
 def name_matches(cited, written, full):
+    if cited.startswith("_root_."):
+        cited = cited[len("_root_."):]
     parts = cited.split(".")
-    if written.split(".")[-1] != parts[-1] or full.split(".")[-1] != parts[-1]:
+    if full.split(".")[-1] != parts[-1]:
         return False
     if len(parts) == 1:
         return True
-    for k in range(len(parts)):
-        suf = ".".join(parts[k:])
-        if suf == full or (suf == written and "." in written):
-            return True
-    return False
+    return cited == full
 
 
 _cache = {}
@@ -234,7 +232,9 @@ def check(root, tex_files, skip_mathlib=False, lines=False):
                     errors.append(f"{where}: `{decl}` in {mod} is declared at line(s) {hits}, after cited {rng}")
     if total == 0:
         errors.append("no \\leanref found in " + ", ".join(map(str, tex_files)))
-    return total, skipped, errors
+    elif total == skipped:
+        errors.append(f"all {skipped} \\leanref were skipped, nothing was checked")
+    return total - skipped, skipped, errors
 
 
 def main(argv=None):
@@ -249,7 +249,7 @@ def main(argv=None):
     total, skipped, errors = check(a.root, a.tex, a.skip_mathlib, a.lines)
     for e in errors:
         print("FAIL", e)
-    print(f"{total} \\leanref checked, {skipped} skipped, {len(errors)} failed")
+    print(f"{total:,} \\leanref checked plus {skipped:,} skipped, {len(errors)} failed")
     return 1 if errors else 0
 
 

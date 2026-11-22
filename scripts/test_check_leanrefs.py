@@ -44,9 +44,30 @@ class T(unittest.TestCase):
     def test_good(self):
         self.ok("good")
         self.ok("Foo.good")
-        self.ok("Bar.Foo.good")          # extra cited prefix is a dot-suffix match
     def test_wrong_namespace(self):
         self.bad("Baz.good")
+        self.bad("Bar.Foo.good")         # extra cited prefix: no suffix matching
+        self.bad("good.good"); self.bad("Foo.Foo.good")
+    def test_qualified_needs_full_name(self):
+        self.bad("S.realField")          # field of Foo.S, cited without namespace
+    def test_root(self):
+        lean = "namespace Foo\ntheorem _root_.Top.t : True := trivial\nend Foo\n"
+        for d, good in [("Top.t", True), ("_root_.Top.t", True), ("Foo.Top.t", False), ("Foo.t", False)]:
+            _, _, errs = self.run_one(d, lean=lean)
+            self.assertEqual(not errs, good, d)
+    def test_noncomputable_section(self):
+        lean = "namespace N\nnoncomputable section\ndef a := 1\nend\ntheorem t : True := trivial\nend N\n"
+        _, _, errs = self.run_one("N.t", lean=lean)
+        self.assertEqual(errs, [])
+        _, _, errs = self.run_one("t", lean=lean.replace("namespace N", "namespace N2"))
+        self.assertEqual(errs, [])
+    def test_all_skipped(self):
+        with tempfile.TemporaryDirectory() as d:
+            tex = Path(d) / "b.tex"
+            tex.write_text("\\leanref{a}{Mathlib.X}{1--2}")
+            checked, skipped, errs = C.check(d, [tex], skip_mathlib=True)
+            self.assertEqual((checked, skipped), (0, 1))
+            self.assertTrue(errs)
     def test_commented_out(self):
         self.bad("commentedLine"); self.bad("inBlock"); self.bad("inDoc")
     def test_prefix_token(self):
